@@ -7,7 +7,7 @@ import de.istec.training.example1.source.TimeValue;
 import java.util.Objects;
 import java.util.Optional;
 
-public interface GroupValueDao {
+public interface TimeValues {
     Optional<TimeValue> value(GroupTypeMonth key);
 
     default Optional<TimeValue> getValue(GroupTypeMonth key) {

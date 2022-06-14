@@ -5,7 +5,7 @@ import de.istec.training.example1.util.Period;
 
 import java.util.List;
 
-public record ValueCellFactory(GroupValueDao groupValueDao, Period period) {
+public record ValueCellFactory(TimeValues groupValueDao, Period period) {
 
     public List<ValueCell> createValueCells(long groupId, String type) {
         return period.stream()

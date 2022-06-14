@@ -42,7 +42,7 @@ public class Example1Service {
                 .toList();
     }
 
-    private GroupValueDao transformData(Period period, Stream<Pair<ValueGroup, TimeValue>> data) {
+    private TimeValues transformData(Period period, Stream<Pair<ValueGroup, TimeValue>> data) {
         var resultMap = data
                 .flatMap(pair -> periodOfTimeValue(pair.getValue1(), period).stream()
                         .map(month -> Pair.with(
