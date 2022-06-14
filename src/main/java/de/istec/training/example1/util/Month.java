@@ -11,12 +11,24 @@ public record Month(int year, int month) implements Comparable<Month> {
     return new Month(month == 12 ? year + 1 : year, month == 12 ? 1 : month + 1);
   }
 
+  public Month previous() {
+    return new Month(month == 1 ? year - 1 : year, month == 1 ? 12 : month - 1);
+  }
+
   public boolean isAfter(Month m) {
     return compareTo(m) > 0;
   }
 
   public boolean isBefore(Month m) {
     return compareTo(m) < 0;
+  }
+
+  public Month max(Month compare) {
+    return compare.isAfter(this) ? compare : this;
+  }
+
+  public Month min(Month compare) {
+    return compare.isBefore(this) ? compare : this;
   }
 
   @Override
