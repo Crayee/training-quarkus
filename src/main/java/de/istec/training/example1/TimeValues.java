@@ -7,17 +7,18 @@ import de.istec.training.example1.source.TimeValue;
 import java.util.Objects;
 import java.util.Optional;
 
+@FunctionalInterface
 public interface TimeValues {
-    Optional<TimeValue> value(GroupTypeMonth key);
+    Optional<TimeValue> timeValue(GroupTypeMonth key);
 
     default Optional<TimeValue> getValue(GroupTypeMonth key) {
-        return value(key).or(() -> getReferencedValue(key));
+        return timeValue(key).or(() -> getReferencedValue(key));
     }
 
     default Optional<TimeValue> getReferencedValue(GroupTypeMonth key) {
-        return value(new GroupTypeMonth(key.groupId(), ExampleData.TYPE_REFERENCE, key.month()))
+        return timeValue(new GroupTypeMonth(key.groupId(), ExampleData.TYPE_REFERENCE, key.month()))
                 .map(ref -> (Reference) ref.value())
-                .flatMap(ref -> value(new GroupTypeMonth(ref.groupId(), key.type(), key.month())));
+                .flatMap(ref -> timeValue(new GroupTypeMonth(ref.groupId(), key.type(), key.month())));
     }
 
     default boolean isReferenced(GroupTypeMonth key) {
