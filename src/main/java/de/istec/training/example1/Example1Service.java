@@ -8,7 +8,9 @@ import de.istec.training.example1.util.Month;
 import de.istec.training.example1.util.Period;
 import org.javatuples.Pair;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,19 +33,19 @@ public class Example1Service {
             * try to be declarative not imperative
         */
 
-        var valueCellFactory = new ValueCellFactory(transformData(period, ExampleData.data()), period);
+        var valueCellFactory = new ValueCellFactory(getTimeValues(period), period);
 
         return ExampleData.groups()
                 .sorted(Comparator.comparing(ValueGroup::name))
                 .flatMap(group ->
                         Stream.of(ExampleData.TYPE_REFERENCE, ExampleData.TYPE_CHARACTER)
-                                .map(type -> new GroupValuesRow(group.name(), type, valueCellFactory.createValueCells(group.id(), type)))
+                                .map(type -> new GroupValuesRow(group.name(), type, valueCellFactory.createRowCells(group.id(), type)))
                 )
                 .toList();
     }
 
-    private TimeValues transformData(Period period, Stream<Pair<ValueGroup, TimeValue>> data) {
-        var resultMap = data
+    private TimeValues getTimeValues(Period period) {
+        var map = ExampleData.data()
                 .flatMap(pair -> periodOfTimeValue(pair.getValue1(), period).stream()
                         .map(month -> Pair.with(
                                 new GroupTypeMonth(pair.getValue0().id(), pair.getValue1().type(), month),
@@ -52,7 +54,7 @@ public class Example1Service {
                 )
                 .collect(Collectors.toMap(Pair::getValue0, Pair::getValue1));
 
-        return (key) -> Optional.ofNullable(resultMap.get(key));
+        return (key) -> Optional.ofNullable(map.get(key));
     }
 
     private Period periodOfTimeValue(TimeValue timeValue, Period relevant) {

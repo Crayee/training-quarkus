@@ -15,12 +15,6 @@ public interface TimeValues {
         return timeValue(key).or(() -> getReferencedValue(key));
     }
 
-    default Optional<TimeValue> getReferencedValue(GroupTypeMonth key) {
-        return timeValue(new GroupTypeMonth(key.groupId(), ExampleData.TYPE_REFERENCE, key.month()))
-                .map(ref -> (Reference) ref.value())
-                .flatMap(ref -> timeValue(new GroupTypeMonth(ref.groupId(), key.type(), key.month())));
-    }
-
     default boolean isReferenced(GroupTypeMonth key) {
         return getReferencedValue(key).isPresent();
     }
@@ -31,5 +25,11 @@ public interface TimeValues {
                 .map(TimeValue::value)
                 .orElse(null);
         return !Objects.equals(value, prevValue);
+    }
+
+    private Optional<TimeValue> getReferencedValue(GroupTypeMonth key) {
+        return timeValue(new GroupTypeMonth(key.groupId(), ExampleData.TYPE_REFERENCE, key.month()))
+                .map(ref -> (Reference) ref.value())
+                .flatMap(ref -> timeValue(new GroupTypeMonth(ref.groupId(), key.type(), key.month())));
     }
 }
